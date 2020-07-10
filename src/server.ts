@@ -1,13 +1,9 @@
 import app from './api/app'
 
-const port = require('./config/config')().serverPort;
+const port = process.env.PORT
 
 
 
 app.listen(port, () => {
-    console.log(`\n[SERVER] Running at http://localhost:${port}\n`)
+    console.dir(`[SERVER] Running at http://localhost:${port}`)
 })
-
-
-
-

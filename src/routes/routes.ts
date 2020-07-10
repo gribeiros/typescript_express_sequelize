@@ -7,11 +7,10 @@ class Routes {
 
     }
 
-
     getRoutes(app: Application): void {
         app.route('/').get((req: Request, res: Response) => { res.send('Server Run') });
         app.route('/api/users/all').get(UserController.index);
-        app.route('/api/users/:id').get(UserController.findOne);
+        app.route('/api/users/:name').get(UserController.findByName);
     }
 
     postRoutes(app: Application): void {
@@ -23,7 +22,7 @@ class Routes {
     }
 
     deleteRoutes(app: Application): void {
-        app.route('/api/users/:id').delete(UserController.delete);
+        app.route('/api/users/:name').delete(UserController.delete);
     }
 }
 

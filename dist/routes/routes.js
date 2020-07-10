@@ -10,7 +10,7 @@ class Routes {
     getRoutes(app) {
         app.route('/').get((req, res) => { res.send('Server Run'); });
         app.route('/api/users/all').get(UserController_1.default.index);
-        app.route('/api/users/:id').get(UserController_1.default.findOne);
+        app.route('/api/users/:name').get(UserController_1.default.findByName);
     }
     postRoutes(app) {
         app.route('/api/users/create').post(UserController_1.default.create);
@@ -19,7 +19,7 @@ class Routes {
         app.route('/api/users/:id').put(UserController_1.default.update);
     }
     deleteRoutes(app) {
-        app.route('/api/users/:id').delete(UserController_1.default.delete);
+        app.route('/api/users/:name').delete(UserController_1.default.delete);
     }
 }
 exports.default = new Routes();

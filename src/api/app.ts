@@ -14,6 +14,7 @@ class App {
         
         this.express = express();
         db.connection.authenticate().then(() => {
+            console.dir('[SERVER] Connected database')
             this.middleware();
         });
 

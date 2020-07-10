@@ -12,6 +12,7 @@ class App {
     constructor() {
         this.express = express_1.default();
         index_1.default.connection.authenticate().then(() => {
+            console.dir('[SERVER] Connected database');
             this.middleware();
         });
     }

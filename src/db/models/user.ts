@@ -37,7 +37,8 @@ User.init(
     {
         id: {
             type: new DataTypes.NUMBER,
-            primaryKey: true
+            primaryKey: true,
+            autoIncrement: true
         },
         name: {
             type: new DataTypes.STRING(120),
@@ -72,5 +73,3 @@ User.addHook(
 );
 
 export default User;
-
-
