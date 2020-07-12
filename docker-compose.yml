@@ -1,12 +1,28 @@
 version: "3"
 
 services: 
+
+  db:
+    image: postgres
+    container_name: "docker_db"
+    restart: always
+    environment:
+       POSTGRES_DB: ts_api
+       POSTGRES_USER: postgres
+       POSTGRES_PASSWORD: root
+    volumes: 
+       - ./pgdata:/var/lib/postgresql/data
+    ports: 
+      - "5432:5432"    
+
   web:
-    build: .
-    command: yarn dev
+    depends_on:
+      - db
+    build: . 
     ports: 
       - "8080:8080"
     volumes: 
       - .:/nodejs_sequelize_express
-
-
+    container_name: nodejs_sequelize_express
+    command: yarn dev
+    network_mode: host

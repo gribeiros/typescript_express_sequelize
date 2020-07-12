@@ -5,6 +5,7 @@ import bcrypt from 'bcrypt'
 
 interface IUserAttributes {
     id: number;
+    cpf: string;
     name: string;
     email: string;
     password: string;
@@ -17,6 +18,8 @@ class User extends Model<IUserAttributes> implements IUserAttributes {
     public id!: number;
 
     public name!: string;
+
+    public cpf!: string;
 
     public email!: string;
 
@@ -43,6 +46,11 @@ User.init(
         name: {
             type: new DataTypes.STRING(120),
             allowNull: false,
+        },
+        cpf: {
+            type: new DataTypes.STRING(15),
+            allowNull: false,
+            unique: true
         },
         email: {
             type: new DataTypes.STRING(80),

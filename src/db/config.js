@@ -2,8 +2,8 @@ module.exports = {
   "development": {
     "username": "postgres",
     "password": "root",
-    "database": "ts-api",
-    "host": "127.0.0.1",
+    "database": "ts_api",
+    "host": "localhost",
     "dialect": "postgres",
 
   },
