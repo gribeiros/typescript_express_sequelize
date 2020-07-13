@@ -12,7 +12,7 @@ interface IUserAttributes {
     passwordHash: string;
 }
 
-interface IUserCreationAttributes extends Optional<IUserAttributes, "id"|"passwordHash"> { }
+interface IUserCreationAttributes extends Optional<IUserAttributes, "id"|"passwordHash"> {}
 
 class User extends Model<IUserAttributes, IUserCreationAttributes> implements IUserAttributes {
 
@@ -56,6 +56,7 @@ User.init(
         email: {
             type: new DataTypes.STRING(80),
             allowNull: false,
+            unique: true
         },
         password: {
             type: new DataTypes.STRING(25),

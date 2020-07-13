@@ -5,11 +5,17 @@ import { Op } from 'sequelize'
 class UserController {
 
     public async getAll(req: Request, res: Response): Promise<any> {
-        res.status(200).json(await User.findAll({
-            order: [
-                ['id', 'ASC']
-            ]
-        }))
+        
+        try {
+            
+            res.status(200).json(await User.findAll({
+                order: [
+                    ['name', 'ASC']
+                ]
+            }))
+        } catch (error) {
+            res.status(500).json({ msg: "Server error", err: error })
+        }
     }
 
     public async getAllByName(req: Request, res: Response): Promise<any> {
@@ -18,15 +24,15 @@ class UserController {
                 name: { [Op.like]: `${req.params.name}%` }
             },
             order: [
-                ['id', 'ASC']
+                ['name', 'ASC']
             ]
         }))
     }
-    
+
     public async findByName(req: Request, res: Response): Promise<any> {
 
-        let user = await User.findOne({ where: { name: { [Op.like]: `${req.params.name}%` } } });
         try {
+            let user = await User.findOne({ where: { name: { [Op.like]: `${req.params.name}%` } } });
             if (user) {
                 res.status(200).json(user)
             } else {
