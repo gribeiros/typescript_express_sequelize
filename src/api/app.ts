@@ -1,4 +1,4 @@
-import express, { Application } from 'express'
+import express from 'express'
 import morgan from 'morgan'
 
 import errorHandlerApi from '../api/errorHandler'
@@ -28,7 +28,7 @@ class App {
 
     }
 
-    private routes(app: Application): void {
+    private routes(app: express.Application): void {
         Routes.getRoutes(app);
         Routes.postRoutes(app);
         Routes.putRoutes(app);

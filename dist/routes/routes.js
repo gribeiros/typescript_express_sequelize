@@ -8,7 +8,7 @@ class Routes {
     constructor() {
     }
     getRoutes(app) {
-        app.route('/').get((req, res) => { res.send('Server Run'); });
+        app.route('/').get((req, res) => { res.json({ serverStatus: "On" }); });
         app.route('/api/users/all').get(UserController_1.default.index);
         app.route('/api/users/:name').get(UserController_1.default.findByName);
     }

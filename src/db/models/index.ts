@@ -1,10 +1,10 @@
 import { Sequelize, Options } from 'sequelize';
-let config: Options
+let config: Options;
 
 if (process.env.NODE_ENV == 'development') {
-  config = require('../../db/config.js').development
+  config = require('../../db/config.js').development;
 } else {
-  config = require('../../db/config.js').test
+  config = require('../../db/config.js').test;
 }
 
 class Database {

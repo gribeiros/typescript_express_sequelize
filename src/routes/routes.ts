@@ -8,9 +8,10 @@ class Routes {
     }
 
     getRoutes(app: Application): void {
-        app.route('/').get((req: Request, res: Response) => { res.send('Server Run') });
-        app.route('/api/users/all').get(UserController.index);
+        app.route('/').get((req: Request, res: Response) => { res.json({ serverStatus: "On" }) });
+        app.route('/api/users/all').get(UserController.getAll);
         app.route('/api/users/:name').get(UserController.findByName);
+        app.route('/api/users/all/:name').get(UserController.getAllByName)
     }
 
     postRoutes(app: Application): void {

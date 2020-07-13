@@ -25,9 +25,9 @@ class UserController {
     }
     create(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { id, name, email, password, passwordHash } = req.body;
+            let { id, name, cpf, email, password, passwordHash } = req.body;
             try {
-                yield user_1.default.create({ id, name, email, password, passwordHash });
+                yield user_1.default.create({ id, name, cpf, email, password, passwordHash });
                 res.json({ msg: 'Save' }).status(200);
             }
             catch (error) {
@@ -38,11 +38,16 @@ class UserController {
     findByName(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
             let user = yield user_1.default.findOne({ where: { name: req.params.name } });
-            if (user) {
-                res.status(200).json(user);
+            try {
+                if (user) {
+                    res.status(200).json(user);
+                }
+                else {
+                    res.status(404).json({ error: 'Not Found' });
+                }
             }
-            else {
-                res.status(404).json({ error: 'Not Found' });
+            catch (error) {
+                res.status(500).json({ msg: "Don't updated", err: error });
             }
         });
     }

@@ -32,6 +32,11 @@ User.init({
         type: new sequelize_1.DataTypes.STRING(120),
         allowNull: false,
     },
+    cpf: {
+        type: new sequelize_1.DataTypes.STRING(15),
+        allowNull: false,
+        unique: true
+    },
     email: {
         type: new sequelize_1.DataTypes.STRING(80),
         allowNull: false,

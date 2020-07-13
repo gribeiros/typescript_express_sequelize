@@ -7,7 +7,4 @@ RUN yarn
 
 EXPOSE 8080
 
-CMD ["yarn" ,"sequelize","db:migrate"]
-
 COPY . .
-
