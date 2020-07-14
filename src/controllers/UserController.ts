@@ -5,9 +5,9 @@ import { Op } from 'sequelize'
 class UserController {
 
     public async getAll(req: Request, res: Response): Promise<any> {
-        
+
         try {
-            
+
             res.status(200).json(await User.findAll({
                 order: [
                     ['name', 'ASC']
@@ -19,14 +19,19 @@ class UserController {
     }
 
     public async getAllByName(req: Request, res: Response): Promise<any> {
-        res.status(200).json(await User.findAll({
-            where: {
-                name: { [Op.like]: `${req.params.name}%` }
-            },
-            order: [
-                ['name', 'ASC']
-            ]
-        }))
+        try {
+
+            res.status(200).json(await User.findAll({
+                where: {
+                    name: { [Op.like]: `${req.params.name}%` }
+                },
+                order: [
+                    ['name', 'ASC']
+                ]
+            }))
+        } catch (error) {
+            res.status(500).json({ msg: "Server error", err: error })
+        }
     }
 
     public async findByName(req: Request, res: Response): Promise<any> {
@@ -45,10 +50,9 @@ class UserController {
     }
 
     public async create(req: Request, res: Response): Promise<any> {
-        let { name, cpf, email, password } = req.body
-        await User.create({ name, cpf, email, password })
         try {
-
+            let { name, cpf, email, password } = req.body
+            await User.create({ name, cpf, email, password })
             res.json({ msg: 'Save' }).status(200)
         } catch (error) {
             res.status(500).json({ msg: "Don't saved", err: error })
@@ -58,9 +62,9 @@ class UserController {
 
 
     public async update(req: Request, res: Response): Promise<any> {
-        let { id, name, email, password, passwordHash } = req.body
 
         try {
+            let { id, name, email, password, passwordHash } = req.body
             await User.update({ id, name, email, password, passwordHash }, {
                 where: {
                     id: req.params.id

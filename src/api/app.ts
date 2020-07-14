@@ -1,5 +1,6 @@
 import express from 'express'
 import morgan from 'morgan'
+import cors from 'cors'
 
 import errorHandlerApi from '../api/errorHandler'
 import Routes from '../routes/routes'
@@ -22,6 +23,8 @@ class App {
 
     private middleware(): void {
         this.express.use(express.json());
+        this.express.use(express.urlencoded({extended:true}));
+        this.express.use(cors())
         this.express.use(morgan('dev'));
         this.express.use(errorHandlerApi);
         this.routes(this.express)

@@ -3,7 +3,7 @@ module.exports = {
     "username": "postgres",
     "password": "root",
     "database": "ts_api",
-    "host": "localhost",
+    "host": "db",
     "dialect": "postgres",
 
   },
