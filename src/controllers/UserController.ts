@@ -2,26 +2,29 @@ import { Request, Response } from 'express'
 import User from '../db/models/user'
 import { Op } from 'sequelize'
 
+
 class UserController {
 
-    public async getAll(req: Request, res: Response): Promise<any> {
+    public async getAll(req: Request, res: Response): Promise<void> {
 
         try {
-
-            res.status(200).json(await User.findAll({
+            let users = await User.findAll({
+                attributes: ['id', 'name','cpf', 'email', 'createdAt', 'updatedAt'],
                 order: [
                     ['name', 'ASC']
-                ]
-            }))
+                ],
+            })
+            res.status(200).json(users)
         } catch (error) {
             res.status(500).json({ msg: "Server error", err: error })
         }
     }
 
-    public async getAllByName(req: Request, res: Response): Promise<any> {
+    public async getAllByName(req: Request, res: Response): Promise<void> {
         try {
 
             res.status(200).json(await User.findAll({
+                attributes: ['id', 'name','cpf', 'email', 'createdAt', 'updatedAt'],
                 where: {
                     name: { [Op.like]: `${req.params.name}%` }
                 },
@@ -34,10 +37,17 @@ class UserController {
         }
     }
 
-    public async findByName(req: Request, res: Response): Promise<any> {
+    public async findByName(req: Request, res: Response): Promise<void> {
 
         try {
-            let user = await User.findOne({ where: { name: { [Op.like]: `${req.params.name}%` } } });
+            let user = await User.findOne({
+                attributes: ['id', 'name','cpf', 'email', 'createdAt', 'updatedAt'],
+                where: {
+                    name: {
+                        [Op.like]: `${req.params.name}%`
+                    }
+                }
+            });
             if (user) {
                 res.status(200).json(user)
             } else {
@@ -49,7 +59,7 @@ class UserController {
 
     }
 
-    public async create(req: Request, res: Response): Promise<any> {
+    public async create(req: Request, res: Response): Promise<void> {
         try {
             let { name, cpf, email, password } = req.body
             await User.create({ name, cpf, email, password })
@@ -61,11 +71,11 @@ class UserController {
     }
 
 
-    public async update(req: Request, res: Response): Promise<any> {
+    public async update(req: Request, res: Response): Promise<void> {
 
         try {
-            let { id, name, email, password, passwordHash } = req.body
-            await User.update({ id, name, email, password, passwordHash }, {
+            let { name, email, password } = req.body
+            await User.update({ name, email, password }, {
                 where: {
                     id: req.params.id
                 }
@@ -76,7 +86,7 @@ class UserController {
         }
     }
 
-    public async delete(req: Request, res: Response): Promise<any> {
+    public async delete(req: Request, res: Response): Promise<void> {
         try {
             await User.destroy({ where: { name: req.params.name } })
             res.status(200).json({ msg: 'Deleted' })

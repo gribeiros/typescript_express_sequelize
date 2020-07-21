@@ -1,17 +1,20 @@
-import { Application, Request, Response } from 'express'
+import { Application, Request, Response,Router } from 'express'
 import UserController from '../controllers/UserController'
 
-class Routes {
 
-    constructor() {
+class UserRoutes {
 
+    constructor(app: Application) {
+        this.getRoutes(app);
+        this.postRoutes(app);
+        this.putRoutes(app);
+        this.deleteRoutes(app);
     }
 
     getRoutes(app: Application): void {
-        app.route('/').get((req: Request, res: Response) => { res.json({ serverStatus: "On" }) });
         app.route('/api/users/all').get(UserController.getAll);
-        app.route('/api/users/:name').get(UserController.findByName);
         app.route('/api/users/all/:name').get(UserController.getAllByName)
+        app.route('/api/users/:name').get(UserController.findByName);
     }
 
     postRoutes(app: Application): void {
@@ -27,4 +30,4 @@ class Routes {
     }
 }
 
-export default new Routes();
+export default UserRoutes;

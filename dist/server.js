@@ -5,6 +5,6 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const app_1 = __importDefault(require("./api/app"));
 const port = process.env.PORT;
-app_1.default.listen(port, () => {
+app_1.default.listen(port || 3000, () => {
     console.dir(`[SERVER] Running at http://localhost:${port}`);
 });

@@ -40,6 +40,7 @@ User.init({
     email: {
         type: new sequelize_1.DataTypes.STRING(80),
         allowNull: false,
+        unique: true
     },
     password: {
         type: new sequelize_1.DataTypes.STRING(25),
@@ -47,7 +48,6 @@ User.init({
     },
     passwordHash: {
         type: new sequelize_1.DataTypes.STRING(125),
-        allowNull: false,
     },
 }, {
     tableName: "User",

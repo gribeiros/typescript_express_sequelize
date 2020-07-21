@@ -13,32 +13,53 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_1 = __importDefault(require("../db/models/user"));
+const sequelize_1 = require("sequelize");
 class UserController {
-    index(req, res) {
+    getAll(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            res.status(200).json(yield user_1.default.findAll({
-                order: [
-                    ['id', 'ASC']
-                ]
-            }));
-        });
-    }
-    create(req, res) {
-        return __awaiter(this, void 0, void 0, function* () {
-            let { id, name, cpf, email, password, passwordHash } = req.body;
             try {
-                yield user_1.default.create({ id, name, cpf, email, password, passwordHash });
-                res.json({ msg: 'Save' }).status(200);
+                let users = yield user_1.default.findAll({
+                    attributes: ['id', 'name', 'cpf', 'email', 'createdAt', 'updatedAt'],
+                    order: [
+                        ['name', 'ASC']
+                    ],
+                });
+                res.status(200).json(users);
             }
             catch (error) {
-                res.status(500).json({ msg: "Don't saved", err: error });
+                res.status(500).json({ msg: "Server error", err: error });
+            }
+        });
+    }
+    getAllByName(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                res.status(200).json(yield user_1.default.findAll({
+                    attributes: ['id', 'name', 'cpf', 'email', 'createdAt', 'updatedAt'],
+                    where: {
+                        name: { [sequelize_1.Op.like]: `${req.params.name}%` }
+                    },
+                    order: [
+                        ['name', 'ASC']
+                    ]
+                }));
+            }
+            catch (error) {
+                res.status(500).json({ msg: "Server error", err: error });
             }
         });
     }
     findByName(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let user = yield user_1.default.findOne({ where: { name: req.params.name } });
             try {
+                let user = yield user_1.default.findOne({
+                    attributes: ['id', 'name', 'cpf', 'email', 'createdAt', 'updatedAt'],
+                    where: {
+                        name: {
+                            [sequelize_1.Op.like]: `${req.params.name}%`
+                        }
+                    }
+                });
                 if (user) {
                     res.status(200).json(user);
                 }
@@ -51,11 +72,23 @@ class UserController {
             }
         });
     }
+    create(req, res) {
+        return __awaiter(this, void 0, void 0, function* () {
+            try {
+                let { name, cpf, email, password } = req.body;
+                yield user_1.default.create({ name, cpf, email, password });
+                res.json({ msg: 'Save' }).status(200);
+            }
+            catch (error) {
+                res.status(500).json({ msg: "Don't saved", err: error });
+            }
+        });
+    }
     update(req, res) {
         return __awaiter(this, void 0, void 0, function* () {
-            let { id, name, email, password, passwordHash } = req.body;
             try {
-                yield user_1.default.update({ id, name, email, password, passwordHash }, {
+                let { name, email, password } = req.body;
+                yield user_1.default.update({ name, email, password }, {
                     where: {
                         id: req.params.id
                     }
