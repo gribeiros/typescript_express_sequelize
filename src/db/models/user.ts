@@ -1,6 +1,7 @@
 import { DataTypes, Model, Optional } from 'sequelize';
 import database from '../models/index';
 import bcrypt from 'bcrypt'
+import validator from 'validator';
 
 
 interface IUserAttributes {
@@ -12,7 +13,7 @@ interface IUserAttributes {
     passwordHash: string;
 }
 
-interface IUserCreationAttributes extends Optional<IUserAttributes, "id"|"passwordHash"> {}
+interface IUserCreationAttributes extends Optional<IUserAttributes, "id" | "passwordHash"> { }
 
 class User extends Model<IUserAttributes, IUserCreationAttributes> implements IUserAttributes {
 
@@ -33,7 +34,7 @@ class User extends Model<IUserAttributes, IUserCreationAttributes> implements IU
     public readonly updatedAt!: Date;
 
     public async checkPassword(password: string): Promise<boolean> {
-        return bcrypt.compare(password, this.passwordHash);
+        return await bcrypt.compare(password, this.passwordHash);
     }
 }
 
@@ -51,12 +52,23 @@ User.init(
         cpf: {
             type: new DataTypes.STRING(15),
             allowNull: false,
-            unique: true
+            unique: {
+                msg: 'Already exist',
+                name: 'cpf'
+            },
+
         },
         email: {
             type: new DataTypes.STRING(80),
             allowNull: false,
-            unique: true
+            unique: {
+                msg: 'Already exist',
+                name: 'email'
+            },
+            validate: {
+                isEmail: true
+            }
+
         },
         password: {
             type: new DataTypes.STRING(25),

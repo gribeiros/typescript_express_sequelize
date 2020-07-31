@@ -25,7 +25,7 @@ class App {
         this.express.use(express.urlencoded({ extended: true }));
         this.express.use(cors())
         this.express.use(morgan('dev'));
-        //this.express.use(errorHandlerApi);
+        this.express.use(errorHandlerApi);
         this.routes(this.express)
 
     }

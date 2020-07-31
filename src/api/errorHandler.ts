@@ -1,8 +1,14 @@
-import { Response, NextFunction, ErrorRequestHandler, Request } from 'express'
+import { NextFunction, Request, Response } from 'express';
+import HttpException from './handler/HttpException';
 
-export default function errorHandlerApi(err: ErrorRequestHandler, req: Request, res: Response, next: NextFunction) {
-    console.error(`API error handler execute: ${err}`)
-    res.status(500).json({
-        message: 'Erro interno no servidor'
-    })
+function errorMiddleware(error: HttpException, request: Request, response: Response, next: NextFunction) {
+    const status = error.status || 500;
+    const message = error.message || 'Internal error server';
+    response
+        .status(status)
+        .json({
+            msg: JSON.stringify(message)
+        })
 }
+
+export default errorMiddleware;
