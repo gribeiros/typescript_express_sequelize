@@ -18,7 +18,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 class User extends sequelize_1.Model {
     checkPassword(password) {
         return __awaiter(this, void 0, void 0, function* () {
-            return bcrypt_1.default.compare(password, this.passwordHash);
+            return yield bcrypt_1.default.compare(password, this.passwordHash);
         });
     }
 }
@@ -35,12 +35,21 @@ User.init({
     cpf: {
         type: new sequelize_1.DataTypes.STRING(15),
         allowNull: false,
-        unique: true
+        unique: {
+            msg: 'Already exist',
+            name: 'cpf'
+        },
     },
     email: {
         type: new sequelize_1.DataTypes.STRING(80),
         allowNull: false,
-        unique: true
+        unique: {
+            msg: 'Already exist',
+            name: 'email'
+        },
+        validate: {
+            isEmail: true
+        }
     },
     password: {
         type: new sequelize_1.DataTypes.STRING(25),

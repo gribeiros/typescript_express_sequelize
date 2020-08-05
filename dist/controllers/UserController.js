@@ -14,8 +14,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const user_1 = __importDefault(require("../db/models/user"));
 const sequelize_1 = require("sequelize");
+const HttpException_1 = __importDefault(require("../api/handler/HttpException"));
+const http_status_codes_1 = __importDefault(require("http-status-codes"));
 class UserController {
-    getAll(req, res) {
+    getAll(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let users = yield user_1.default.findAll({
@@ -24,17 +26,17 @@ class UserController {
                         ['name', 'ASC']
                     ],
                 });
-                res.status(200).json(users);
+                res.status(http_status_codes_1.default.OK).json(users);
             }
             catch (error) {
-                res.status(500).json({ msg: "Server error", err: error });
+                next(new HttpException_1.default(error, http_status_codes_1.default.INTERNAL_SERVER_ERROR));
             }
         });
     }
-    getAllByName(req, res) {
+    getAllByName(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
-                res.status(200).json(yield user_1.default.findAll({
+                res.status(http_status_codes_1.default.OK).json(yield user_1.default.findAll({
                     attributes: ['id', 'name', 'cpf', 'email', 'createdAt', 'updatedAt'],
                     where: {
                         name: { [sequelize_1.Op.like]: `${req.params.name}%` }
@@ -45,11 +47,11 @@ class UserController {
                 }));
             }
             catch (error) {
-                res.status(500).json({ msg: "Server error", err: error });
+                next(new HttpException_1.default(error, http_status_codes_1.default.INTERNAL_SERVER_ERROR));
             }
         });
     }
-    findByName(req, res) {
+    findByName(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let user = yield user_1.default.findOne({
@@ -61,30 +63,30 @@ class UserController {
                     }
                 });
                 if (user) {
-                    res.status(200).json(user);
+                    res.status(http_status_codes_1.default.OK).json(user);
                 }
                 else {
-                    res.status(404).json({ error: 'Not Found' });
+                    next(new HttpException_1.default('Not Found', http_status_codes_1.default.NOT_FOUND));
                 }
             }
             catch (error) {
-                res.status(500).json({ msg: "Don't updated", err: error });
+                next(new HttpException_1.default(error, http_status_codes_1.default.INTERNAL_SERVER_ERROR));
             }
         });
     }
-    create(req, res) {
+    create(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let { name, cpf, email, password } = req.body;
                 yield user_1.default.create({ name, cpf, email, password });
-                res.json({ msg: 'Save' }).status(200);
+                res.json({ msg: 'Save' }).status(http_status_codes_1.default.OK);
             }
             catch (error) {
-                res.status(500).json({ msg: "Don't saved", err: error });
+                next(new HttpException_1.default(error, http_status_codes_1.default.INTERNAL_SERVER_ERROR));
             }
         });
     }
-    update(req, res) {
+    update(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 let { name, email, password } = req.body;
@@ -93,21 +95,21 @@ class UserController {
                         id: req.params.id
                     }
                 });
-                res.json({ msg: 'Update' }).status(200);
+                res.json({ msg: 'Update' }).status(http_status_codes_1.default.OK);
             }
             catch (error) {
-                res.status(500).json({ msg: "Don't updated", err: error });
+                next(new HttpException_1.default(error, http_status_codes_1.default.INTERNAL_SERVER_ERROR));
             }
         });
     }
-    delete(req, res) {
+    delete(req, res, next) {
         return __awaiter(this, void 0, void 0, function* () {
             try {
                 yield user_1.default.destroy({ where: { name: req.params.name } });
-                res.status(200).json({ msg: 'Deleted' });
+                res.status(http_status_codes_1.default.OK).json({ msg: 'Deleted' });
             }
             catch (error) {
-                res.status(500).json({ msg: "Don't deleted", err: error });
+                next(new HttpException_1.default(error, http_status_codes_1.default.INTERNAL_SERVER_ERROR));
             }
         });
     }

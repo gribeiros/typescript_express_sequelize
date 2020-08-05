@@ -22,9 +22,10 @@ class App {
 
     private middleware(): void {
         this.express.use(express.json());
+        
         this.express.use(express.urlencoded({ extended: true }));
         this.express.use(cors())
-        this.express.use(morgan('dev'));
+        this.express.use(morgan('common'));
         this.express.use(errorHandlerApi);
         this.routes(this.express)
 
@@ -33,8 +34,6 @@ class App {
     private routes(app: express.Application): void {
         new UserRoutes(app);
     }
-
-
 
 }
 

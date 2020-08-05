@@ -15,13 +15,16 @@ class App {
         index_1.default.connection.authenticate().then(() => {
             console.dir('[SERVER] Connected database');
             this.middleware();
+            this.express.route('/').get((req, res) => { res.json({ serverStatus: "On" }); });
         });
     }
     middleware() {
         this.express.use(express_1.default.json());
         this.express.use(express_1.default.urlencoded({ extended: true }));
         this.express.use(cors_1.default());
-        this.express.use(morgan_1.default('dev'));
+        if (process.env.NODE_ENV == 'development') {
+            this.express.use(morgan_1.default('dev'));
+        }
         this.express.use(errorHandler_1.default);
         this.routes(this.express);
     }

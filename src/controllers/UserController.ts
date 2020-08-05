@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import User from '../db/models/user'
 import { Op } from 'sequelize'
 import HttpException from '../api/handler/HttpException'
+import HttpStatus from 'http-status-codes'
 
 class UserController {
 
@@ -9,22 +10,22 @@ class UserController {
 
         try {
             let users = await User.findAll({
-                attributes: ['id', 'name', 'cpf', 'email', 'createdAt', 'updatedAt'],
+                attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt'],
                 order: [
                     ['name', 'ASC']
                 ],
             })
-            res.status(200).json(users)
+            res.status(HttpStatus.OK).json(users)
         } catch (error) {
-            next(new HttpException(error, 500))
+            next(new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR))
         }
     }
 
     public async getAllByName(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
 
-            res.status(200).json(await User.findAll({
-                attributes: ['id', 'name', 'cpf', 'email', 'createdAt', 'updatedAt'],
+            res.status(HttpStatus.OK).json(await User.findAll({
+                attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt'],
                 where: {
                     name: { [Op.like]: `${req.params.name}%` }
                 },
@@ -33,7 +34,7 @@ class UserController {
                 ]
             }))
         } catch (error) {
-            next(new HttpException(error, 500))
+            next(new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR))
         }
     }
 
@@ -41,7 +42,7 @@ class UserController {
 
         try {
             let user = await User.findOne({
-                attributes: ['id', 'name', 'cpf', 'email', 'createdAt', 'updatedAt'],
+                attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt'],
                 where: {
                     name: {
                         [Op.like]: `${req.params.name}%`
@@ -49,23 +50,23 @@ class UserController {
                 }
             });
             if (user) {
-                res.status(200).json(user)
+                res.status(HttpStatus.OK).json(user)
             } else {
-                next(new HttpException('Not Found', 404))
+                next(new HttpException('Not Found', HttpStatus.NOT_FOUND))
             }
         } catch (error) {
-            next(new HttpException(error, 500))
+            next(new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR))
         }
 
     }
 
     public async create(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
-            let { name, cpf, email, password } = req.body
-            await User.create({ name, cpf, email, password })
-            res.json({ msg: 'Save' }).status(200)
+            let { name, email, password } = req.body
+            await User.create({ name, email, password })
+            res.json({ msg: 'Save' }).status(HttpStatus.OK)
         } catch (error) {
-            next(new HttpException(error, 500))
+            next(new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR))
         }
     }
 
@@ -79,18 +80,18 @@ class UserController {
                     id: req.params.id
                 }
             })
-            res.json({ msg: 'Update' }).status(200)
+            res.json({ msg: 'Update' }).status(HttpStatus.OK)
         } catch (error) {
-            next(new HttpException(error, 500))
+            next(new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR))
         }
     }
 
     public async delete(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             await User.destroy({ where: { name: req.params.name } })
-            res.status(200).json({ msg: 'Deleted' })
+            res.status(HttpStatus.OK).json({ msg: 'Deleted' })
         } catch (error) {
-            next(new HttpException(error, 500))
+            next(new HttpException(error, HttpStatus.INTERNAL_SERVER_ERROR))
         }
 
 

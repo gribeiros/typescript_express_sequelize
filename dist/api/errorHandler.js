@@ -1,9 +1,16 @@
 "use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-function errorHandlerApi(err, req, res, next) {
-    console.error(`API error handler execute: ${err}`);
-    res.status(500).json({
-        message: 'Erro interno no servidor'
+const http_status_codes_1 = __importDefault(require("http-status-codes"));
+function errorMiddleware(error, request, response, next) {
+    const status = error.status || http_status_codes_1.default.INTERNAL_SERVER_ERROR;
+    const message = error.message || 'Internal server error';
+    response
+        .status(status)
+        .json({
+        msg: message
     });
 }
-exports.default = errorHandlerApi;
+exports.default = errorMiddleware;

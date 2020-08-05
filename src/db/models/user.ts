@@ -6,7 +6,6 @@ import validator from 'validator';
 
 interface IUserAttributes {
     id: number;
-    cpf: string;
     name: string;
     email: string;
     password: string;
@@ -20,8 +19,6 @@ class User extends Model<IUserAttributes, IUserCreationAttributes> implements IU
     public id!: number;
 
     public name!: string;
-
-    public cpf!: string;
 
     public email!: string;
 
@@ -48,15 +45,6 @@ User.init(
         name: {
             type: new DataTypes.STRING(120),
             allowNull: false,
-        },
-        cpf: {
-            type: new DataTypes.STRING(15),
-            allowNull: false,
-            unique: {
-                msg: 'Already exist',
-                name: 'cpf'
-            },
-
         },
         email: {
             type: new DataTypes.STRING(80),
